@@ -227,6 +227,8 @@ if 'jogo_encerrado' not in st.session_state:
     st.session_state.jogo_encerrado = False
 if 'nome_jogador' not in st.session_state:
     st.session_state.nome_jogador = ""
+if 'palpites' not in st.session_state:
+    st.session_state.palpites = []
 
 # Formulário para iniciar o jogo
 with st.form("inicio"):
@@ -238,13 +240,13 @@ if iniciar and st.session_state.nome_jogador:
     # Configurar jogo baseado no nível
     if nivel == "Fácil":
         st.session_state.numero_secreto = random.randint(1, 50)
-        st.session_state.vidas_iniciais = st.session_state.vidas = 7
+        st.session_state.vidas_iniciais = st.session_state.vidas = 10
     elif nivel == "Médio":
         st.session_state.numero_secreto = random.randint(1, 100)
-        st.session_state.vidas_iniciais = st.session_state.vidas = 5
+        st.session_state.vidas_iniciais = st.session_state.vidas = 8
     else:  # Difícil
         st.session_state.numero_secreto = random.randint(1, 200)
-        st.session_state.vidas_iniciais = st.session_state.vidas = 3
+        st.session_state.vidas_iniciais = st.session_state.vidas = 6
     
     st.session_state.tentativas = 0
     st.session_state.inicio_jogo = time.time()
@@ -266,24 +268,47 @@ if st.session_state.numero_secreto is not None and not st.session_state.jogo_enc
     
     if enviar:
         st.session_state.tentativas += 1
+        st.session_state.palpites.append(palpite)  # Adiciona o palpite à lista
+
+        # Mostra os palpites anteriores
+        st.write(f"Você já digitou os números: {', '.join(map(str, st.session_state.palpites))}")
         
-        if palpite == st.session_state.numero_secreto:
-            tempo_total = time.time() - st.session_state.inicio_jogo
+    if palpite == st.session_state.numero_secreto:
+        tempo_total = time.time() - st.session_state.inicio_jogo
+        st.session_state.jogo_encerrado = True
+        st.balloons()
+        st.success(f"🎉 Parabéns {st.session_state.nome_jogador}! Você acertou em {st.session_state.tentativas} tentativas!")
+        st.markdown(f"<div class='highlight'>Tempo total: {tempo_total:.2f} segundos</div>", unsafe_allow_html=True)
+        salvar_vencedor(st.session_state.nome_jogador, st.session_state.tentativas, tempo_total, nivel, st.session_state.vidas)
+    else:
+        st.session_state.vidas -= 1
+        if st.session_state.vidas <= 0:
             st.session_state.jogo_encerrado = True
-            st.balloons()
-            st.success(f"🎉 Parabéns {st.session_state.nome_jogador}! Você acertou em {st.session_state.tentativas} tentativas!")
-            st.markdown(f"<div class='highlight'>Tempo total: {tempo_total:.2f} segundos</div>", unsafe_allow_html=True)
-            salvar_vencedor(st.session_state.nome_jogador, st.session_state.tentativas, tempo_total, nivel, st.session_state.vidas)
+            st.markdown(f"<div class='game-over'>😢 Game Over! O número secreto era {st.session_state.numero_secreto}</div>", 
+                        unsafe_allow_html=True)
         else:
-            st.session_state.vidas -= 1
-            if st.session_state.vidas <= 0:
-                st.session_state.jogo_encerrado = True
-                st.markdown(f"<div class='game-over'>😢 Game Over! O número secreto era {st.session_state.numero_secreto}</div>", 
-                            unsafe_allow_html=True)
-            else:
-                dica = "🔽 Menor" if palpite > st.session_state.numero_secreto else "🔼 Maior"
-                st.warning(f"{dica} que {palpite}")
-                st.info(gerar_dica(palpite, st.session_state.numero_secreto, nivel))
+            dica = "🔽 Menor" if palpite > st.session_state.numero_secreto else "🔼 Maior"
+            st.warning(f"{dica} que {palpite}")
+            st.info(gerar_dica(palpite, st.session_state.numero_secreto, nivel))
+            
+# limpeza da lista de palpites quando o jogo for reiniciado            
+if iniciar and st.session_state.nome_jogador:
+    # Configurar jogo baseado no nível
+    if nivel == "Fácil":
+        st.session_state.numero_secreto = random.randint(1, 50)
+        st.session_state.vidas_iniciais = st.session_state.vidas = 10
+    elif nivel == "Médio":
+        st.session_state.numero_secreto = random.randint(1, 100)
+        st.session_state.vidas_iniciais = st.session_state.vidas = 8
+    else:  # Difícil
+        st.session_state.numero_secreto = random.randint(1, 200)
+        st.session_state.vidas_iniciais = st.session_state.vidas = 6
+    
+    st.session_state.tentativas = 0
+    st.session_state.palpites = []  # Limpa os palpites anteriores
+    st.session_state.inicio_jogo = time.time()
+    st.session_state.jogo_encerrado = False
+    st.success(f"Jogo iniciado! Nível: {nivel}. Boa sorte, {st.session_state.nome_jogador}!")
 
 # Mostrar ranking
 mostrar_ranking()
