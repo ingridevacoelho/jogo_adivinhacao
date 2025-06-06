@@ -141,6 +141,31 @@ def gerar_dica(palpite, numero_secreto, nivel):
 def exibir_vidas(vidas, vidas_iniciais):
     return "❤️" * vidas + "🖤" * (vidas_iniciais - vidas)
 
+# Função para exibir histórico de palpites
+def mostrar_historico_palpites(palpites, numero_secreto):
+    if not palpites:
+        return
+    
+    st.markdown("<div class='guess-history'>", unsafe_allow_html=True)
+    st.markdown("<h3>Seus palpites anteriores:</h3>", unsafe_allow_html=True)
+    
+    html_palpites = ""
+    for p in palpites:
+        # Determina a cor com base na proximidade do palpite
+        if p < numero_secreto:
+            cor = "#007bff"  # Azul para menor
+            seta = "↑"
+        elif p > numero_secreto:
+            cor = "#dc3545"  # Vermelho para maior
+            seta = "↓"
+        else:
+            cor = "#28a745"  # Verde para acerto
+            seta = "✓"
+            
+        html_palpites += f"<span class='guess-item' style='color: white; background-color: {cor};'>{p} {seta}</span> "
+    
+    st.markdown(f"<div>{html_palpites}</div>", unsafe_allow_)
+
 # Inicializar o banco de dados
 init_db()
 
