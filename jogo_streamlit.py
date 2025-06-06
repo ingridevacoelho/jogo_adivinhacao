@@ -152,28 +152,6 @@ def mostrar_historico_palpites(palpites, numero_secreto):
             elif p > numero_secreto:
                 st.write(f"{i}. {p} 🔽 (Menor)")
 
-def salvar_vencedor(nome, tentativas, tempo, nivel, vidas):
-    """Salva os dados do vencedor em um arquivo CSV"""
-    data = {
-        'Nome': [nome],
-        'Tentativas': [tentativas],
-        'Tempo (s)': [round(tempo, 2)],
-        'Nível': [nivel],
-        'Vidas Restantes': [vidas],
-        'Data': [time.strftime("%Y-%m-%d %H:%M:%S")]
-    }
-    
-    df = pd.DataFrame(data)
-    
-    # Verifica se o arquivo já existe
-    if os.path.exists('ranking.csv'):
-        ranking = pd.read_csv('ranking.csv')
-        ranking = pd.concat([ranking, df], ignore_index=True)
-    else:
-        ranking = df
-    
-    ranking.to_csv('ranking.csv', index=False)
-
 # Inicializar o banco de dados
 init_db()
 
@@ -279,6 +257,7 @@ if st.session_state.numero_secreto is not None and not st.session_state.jogo_enc
                 st.balloons()
                 st.success(f"🎉 Parabéns {st.session_state.nome_jogador}! Você acertou em {st.session_state.tentativas} tentativas!")
                 st.markdown(f"<div class='highlight'>Tempo total: {tempo_total:.2f} segundos</div>", unsafe_allow_html=True)
+                # Esta linha deve estar chamando a função correta:
                 salvar_vencedor(st.session_state.nome_jogador, st.session_state.tentativas, tempo_total, nivel, st.session_state.vidas)
             else:
                 st.session_state.vidas -= 1
