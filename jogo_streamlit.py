@@ -230,13 +230,13 @@ if iniciar and st.session_state.nome_jogador:
     # Configurar jogo baseado no nível
     if nivel == "Fácil":
         st.session_state.numero_secreto = random.randint(1, 50)
-        st.session_state.vidas_iniciais = st.session_state.vidas = 7
+        st.session_state.vidas_iniciais = st.session_state.vidas = 10
     elif nivel == "Médio":
         st.session_state.numero_secreto = random.randint(1, 100)
-        st.session_state.vidas_iniciais = st.session_state.vidas = 5
+        st.session_state.vidas_iniciais = st.session_state.vidas = 8
     else:  # Difícil
         st.session_state.numero_secreto = random.randint(1, 200)
-        st.session_state.vidas_iniciais = st.session_state.vidas = 3
+        st.session_state.vidas_iniciais = st.session_state.vidas = 6
     
     st.session_state.tentativas = 0
     st.session_state.inicio_jogo = time.time()
