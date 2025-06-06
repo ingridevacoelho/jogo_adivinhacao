@@ -266,30 +266,30 @@ if st.session_state.numero_secreto is not None and not st.session_state.jogo_enc
                                  step=1)
         enviar = st.form_submit_button("Palpitar")
     
-    if enviar:
-        st.session_state.tentativas += 1
-        st.session_state.palpites.append(palpite)  # Adiciona o palpite à lista
-
-        # Mostra os palpites anteriores
-        st.write(f"Você já digitou os números: {', '.join(map(str, st.session_state.palpites))}")
+        if enviar:
+            st.session_state.tentativas += 1
+            st.session_state.palpites.append(palpite)  # Adiciona o palpite à lista
         
-    if palpite == st.session_state.numero_secreto:
-        tempo_total = time.time() - st.session_state.inicio_jogo
-        st.session_state.jogo_encerrado = True
-        st.balloons()
-        st.success(f"🎉 Parabéns {st.session_state.nome_jogador}! Você acertou em {st.session_state.tentativas} tentativas!")
-        st.markdown(f"<div class='highlight'>Tempo total: {tempo_total:.2f} segundos</div>", unsafe_allow_html=True)
-        salvar_vencedor(st.session_state.nome_jogador, st.session_state.tentativas, tempo_total, nivel, st.session_state.vidas)
-    else:
-        st.session_state.vidas -= 1
-        if st.session_state.vidas <= 0:
-            st.session_state.jogo_encerrado = True
-            st.markdown(f"<div class='game-over'>😢 Game Over! O número secreto era {st.session_state.numero_secreto}</div>", 
-                        unsafe_allow_html=True)
-        else:
-            dica = "🔽 Menor" if palpite > st.session_state.numero_secreto else "🔼 Maior"
-            st.warning(f"{dica} que {palpite}")
-            st.info(gerar_dica(palpite, st.session_state.numero_secreto, nivel))
+            # Mostra os palpites anteriores
+            st.write(f"Você já digitou os números: {', '.join(map(str, st.session_state.palpites))}")
+            
+            if palpite == st.session_state.numero_secreto:
+                tempo_total = time.time() - st.session_state.inicio_jogo
+                st.session_state.jogo_encerrado = True
+                st.balloons()
+                st.success(f"🎉 Parabéns {st.session_state.nome_jogador}! Você acertou em {st.session_state.tentativas} tentativas!")
+                st.markdown(f"<div class='highlight'>Tempo total: {tempo_total:.2f} segundos</div>", unsafe_allow_html=True)
+                salvar_vencedor(st.session_state.nome_jogador, st.session_state.tentativas, tempo_total, nivel, st.session_state.vidas)
+            else:
+                st.session_state.vidas -= 1
+                if st.session_state.vidas <= 0:
+                    st.session_state.jogo_encerrado = True
+                    st.markdown(f"<div class='game-over'>😢 Game Over! O número secreto era {st.session_state.numero_secreto}</div>", 
+                                unsafe_allow_html=True)
+                else:
+                    dica = "🔽 Menor" if palpite > st.session_state.numero_secreto else "🔼 Maior"
+                    st.warning(f"{dica} que {palpite}")
+                    st.info(gerar_dica(palpite, st.session_state.numero_secreto, nivel))
             
 # limpeza da lista de palpites quando o jogo for reiniciado            
 if iniciar and st.session_state.nome_jogador:
