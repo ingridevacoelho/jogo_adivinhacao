@@ -169,9 +169,9 @@ with st.expander("📜 Como jogar (Clique para expandir)"):
         <li><strong>Objetivo:</strong> Adivinhar o número secreto com o menor número de tentativas possível.</li>
         <li><strong>Sistema de vidas:</strong> Você começa com um número de vidas que varia conforme o nível:
             <ul>
-                <li>Nível Fácil: 7 vidas (número entre 1-50)</li>
-                <li>Nível Médio: 5 vidas (número entre 1-100)</li>
-                <li>Nível Difícil: 3 vidas (número entre 1-200)</li>
+                <li>Nível Fácil: 10 vidas (número entre 1-50)</li>
+                <li>Nível Médio: 8 vidas (número entre 1-100)</li>
+                <li>Nível Difícil: 6 vidas (número entre 1-200)</li>
             </ul>
         </li>
         <li><strong>Como jogar:</strong>
